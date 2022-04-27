@@ -52,14 +52,13 @@ form{margin:2px;display: inline}</style>\
 </html>";
  void handle5() {
    running = !running;
-  digitalWrite(dirPin, HIGH); //"Set run as clockwise
+  digitalWrite(dirPin, HIGH); //"Set run on clockwise
  }
 
 void handle4() {
  running = !running;
- digitalWrite(dirPin, LOW);//"Set run as anti-clockwise
-Serial.println(running);
-
+ digitalWrite(dirPin, LOW);//"Set run on anti-clockwise
+// Serial.println(running);
  }
 
 void handleRoot() {
@@ -108,7 +107,7 @@ void setup(void) {
 
   pinMode(stepPin, OUTPUT); //Step pin as output
   pinMode(dirPin,  OUTPUT); //Direcction pin as output
-  digitalWrite(stepPin, LOW); // Currently no stepper motor movement
+  digitalWrite(stepPin, LOW); // Set motor stop when initial power is on.
   digitalWrite(dirPin, HIGH);  
 
   // Wait for connection
@@ -127,8 +126,8 @@ void setup(void) {
   server.on("/1/", handle1);
   server.on("/2/", handle2);
   server.on("/3/", handle3);
-  server.on("/4/", handle4);//Stepper Motor control
-  server.on("/5/", handle5);//Stepper Motor control
+  server.on("/4/", handle4);//Stepper Motor control//"Set run on anti-clockwise
+  server.on("/5/", handle5);//Stepper Motor control//"Set run on clockwise
 
   server.begin();
   Serial.println("HTTP server started");
@@ -137,21 +136,21 @@ void setup(void) {
 void loop(void) {
   server.handleClient();
   if(running)
- {
-   digitalWrite(stepPin,LOW);
-   Serial.println("stepPin,LOW");
- }
+    {
+      digitalWrite(stepPin,LOW);
+      //  Serial.println("stepPin,LOW");
+    }
   else
   {
   digitalWrite(stepPin,HIGH);
-  Serial.println("stepPin,HIGH");
-  for(int x = 0; x < 600; x++) // Loop 200 times
-  {
+  // Serial.println("stepPin,HIGH");
+  // for(int x = 0; x < 600; x++) // Loop 200 times
+  // {
       digitalWrite(stepPin,HIGH); // Output high
       delayMicroseconds(500); // Wait 1/2 a ms  340--1500
       digitalWrite(stepPin,LOW); // Output low
       delayMicroseconds(500); // Wait 1/2 a ms 340--1500
-    }
-    delay(2000); 
+    // }
+    // delay(2000); 
   }
 }
